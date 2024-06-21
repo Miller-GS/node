@@ -2,7 +2,6 @@
 
 require('../common');
 const assert = require('assert');
-
 const rangeBuffer = Buffer.from('abc');
 
 // If start >= buffer's length, empty string will be returned
@@ -97,4 +96,11 @@ assert.throws(() => {
   code: 'ERR_UNKNOWN_ENCODING',
   name: 'TypeError',
   message: 'Unknown encoding: null'
+});
+
+// Buffer.toString() should be able to handle buffers greater than INTMAX but less than kMaxLength
+assert.doesNotThrow(() => {
+  const INT_MAX = 2 ** 31 - 1;
+  const bigBuffer = Buffer.alloc(INT_MAX + 3);
+  bigBuffer.toString('utf8', INT_MAX + 1, INT_MAX + 2);
 });
